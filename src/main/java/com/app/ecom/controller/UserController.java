@@ -1,6 +1,7 @@
 package com.app.ecom.controller;
 
-import com.app.ecom.model.User;
+import com.app.ecom.dto.UserRequest;
+import com.app.ecom.dto.UserResponse;
 import com.app.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,27 +18,27 @@ public class UserController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<User>> allUsers(){
+    public ResponseEntity<List<UserResponse>> allUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        return new ResponseEntity<>(userService.addUser(
-                user
-        ), HttpStatus.CREATED);
+    public ResponseEntity<String> addUser(@RequestBody UserRequest userRequest){
+        userService.addUser(userRequest);
+        return new ResponseEntity<>("User added successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id){
         return new ResponseEntity<>(userService.getUserById(id),  HttpStatus.OK);
 
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id,@RequestBody User user){
-        boolean updated = userService.updateUserById(id, user);
+    public ResponseEntity<String> updateUser(@PathVariable Long id,@RequestBody UserRequest
+            userRequest){
+        boolean updated = userService.updateUserById(id, userRequest);
         return updated ? ResponseEntity.ok("Updated successfully") : ResponseEntity.notFound().build();
     }
 }
