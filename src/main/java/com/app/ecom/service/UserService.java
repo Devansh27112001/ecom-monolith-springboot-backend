@@ -14,7 +14,6 @@ public class UserService {
     private UserRepo repository;
 
     List<User> users = new ArrayList<>();
-    private Long userId = 1L;
 
 
     public List<User> getAllUsers()
@@ -23,7 +22,7 @@ public class UserService {
     }
 
     public User addUser(User user){
-        user.setId(userId++);
+        user.setId(null);
         return repository.save(user);
     }
 
