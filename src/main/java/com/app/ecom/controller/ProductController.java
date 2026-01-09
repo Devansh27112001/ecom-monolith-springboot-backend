@@ -20,12 +20,13 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<List<ProductResponse>> findAll(){
         return ResponseEntity.ok(productService.findAll());
-
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
-        return ResponseEntity.ok(productService.findById(id));
+        return productService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("")
@@ -42,4 +43,18 @@ public class ProductController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() ->  ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        boolean deleted = productService.deleteById(id);
+        return deleted ? ResponseEntity.noContent().build() :  ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchByKeyWord(@RequestParam String keyword){
+        return ResponseEntity.ok(productService.searchProduct(keyword));
+    }
+
+
+
 }
