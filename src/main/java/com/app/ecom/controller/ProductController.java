@@ -1,11 +1,12 @@
 package com.app.ecom.controller;
 
-import com.app.ecom.model.Product;
+import com.app.ecom.dto.ProductRequest;
+import com.app.ecom.dto.ProductResponse;
+import com.app.ecom.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,13 +14,32 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("")
-    public ResponseEntity<List<Product>> findAll(){
-        return ResponseEntity.ok(List.of(new Product()));
+    public ResponseEntity<List<ProductResponse>> findAll(){
+        return ResponseEntity.ok(productService.findAll());
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id){
-        return ResponseEntity.ok(new Product());
+    public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
+        return ResponseEntity.ok(productService.findById(id));
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest productRequest){
+        System.out.println("ProductController:create");
+        return new ResponseEntity<>(productService.addProduct(productRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> update(
+            @RequestBody ProductRequest productRequest,
+            @PathVariable Long id){
+        return productService.updateProduct(productRequest,id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() ->  ResponseEntity.notFound().build());
     }
 }
