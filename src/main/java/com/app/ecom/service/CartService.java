@@ -62,7 +62,7 @@ public class CartService {
             cartItem.setUser(user);
             cartItem.setProduct(product);
             cartItem.setQuantity(request.getQuantity());
-            cartItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity())));
+            cartItem.setPrice(product.getPrice());
             cartRepo.save(cartItem);
         }
 
@@ -96,5 +96,10 @@ public class CartService {
         cartItemResponse.setTotalPrice(cartItem.getPrice());
 
         return  cartItemResponse;
+    }
+
+    public void clearCart(String userId) {
+        userRepo.findById(Long.valueOf(userId)).ifPresent(user ->
+                cartRepo.deleteByUser(user));
     }
 }
