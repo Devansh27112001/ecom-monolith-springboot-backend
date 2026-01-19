@@ -40,7 +40,7 @@ public class CartController {
 
 
     @GetMapping("/items")
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@RequestHeader("X-User-ID") String userId){
+    public ResponseEntity<List<CartItem>> getCartItems(@RequestHeader("X-User-ID") String userId){
         return new ResponseEntity<>(cartService.findCartItemsByUserId(userId), HttpStatus.OK);
     }
 }

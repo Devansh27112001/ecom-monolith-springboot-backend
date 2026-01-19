@@ -80,12 +80,11 @@ public class CartService {
         return false;
     }
 
-    public List<CartItemResponse> findCartItemsByUserId(String id){
+    public List<CartItem> findCartItemsByUserId(String id){
         //Validation
         Optional<User> userOpt = userRepo.findById(Long.valueOf(id));
         return userOpt.map(user -> cartRepo.findAllByUser(user)
                 .stream()
-                .map(this::mapToCartItemResponse)
                 .toList()).orElseGet(ArrayList::new);
     }
 
