@@ -55,6 +55,4 @@ public class ProductController {
         return ResponseEntity.ok(productService.searchProduct(keyword));
     }
 
-
-
 }
