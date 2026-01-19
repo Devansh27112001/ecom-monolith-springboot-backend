@@ -4,16 +4,21 @@ import com.app.ecom.dao.CartRepo;
 import com.app.ecom.dao.ProductRepo;
 import com.app.ecom.dao.UserRepo;
 import com.app.ecom.dto.CartItemRequest;
+import com.app.ecom.dto.CartItemResponse;
 import com.app.ecom.model.CartItem;
 import com.app.ecom.model.Product;
 import com.app.ecom.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CartService {
 
     @Autowired
@@ -62,5 +67,35 @@ public class CartService {
         }
 
         return true;
+    }
+
+    public boolean deleteItemFromCart(String userId, Long productId) {
+        Optional<Product> productOpt = productRepo.findById(productId);
+        Optional<User> userOpt = userRepo.findById(Long.valueOf(userId));
+
+        if(productOpt.isPresent() && userOpt.isPresent()){
+            cartRepo.deleteByUserAndProduct(userOpt.get(),productOpt.get());
+            return true;
+        }
+        return false;
+    }
+
+    public List<CartItemResponse> findCartItemsByUserId(String id){
+        //Validation
+        Optional<User> userOpt = userRepo.findById(Long.valueOf(id));
+        return userOpt.map(user -> cartRepo.findAllByUser(user)
+                .stream()
+                .map(this::mapToCartItemResponse)
+                .toList()).orElseGet(ArrayList::new);
+    }
+
+    private CartItemResponse mapToCartItemResponse(CartItem cartItem){
+        CartItemResponse cartItemResponse = new CartItemResponse();
+
+        cartItemResponse.setQuantity(cartItem.getQuantity());
+        cartItemResponse.setProductName(cartItem.getProduct().getName());
+        cartItemResponse.setTotalPrice(cartItem.getPrice());
+
+        return  cartItemResponse;
     }
 }
