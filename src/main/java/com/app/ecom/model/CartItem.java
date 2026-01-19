@@ -26,13 +26,13 @@ public class CartItem {
     @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 
-    @CreationTimestamp
     private Integer quantity;
-
-    @UpdateTimestamp
     private BigDecimal price;
 
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
