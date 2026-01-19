@@ -27,6 +27,8 @@ public class User {
     private UserRole role = UserRole.CUSTOMER;
 
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    // CascadeType.ALL: Any changes to the address of a particular user will reflect in the address table as well
+    // orphanRemoval = true: If a user is deleted, the addresses associated to it will also be deleted.
     @JoinColumn(name = "address_id",referencedColumnName = "id")
     private Address address;
 

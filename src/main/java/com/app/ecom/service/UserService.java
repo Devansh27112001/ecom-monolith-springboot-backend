@@ -29,13 +29,20 @@ public class UserService {
 
     public void addUser(UserRequest userRequest) {
         User user = new User();
+
+        // Mapping UserRequest to User.
         updateUserRequestToUser(user,userRequest);
+
+        // Saving the user in database.
         repository.save(user);
     }
 
 
 
     public UserResponse getUserById(Long id) {
+        // NOTE: If you don't want to use .orElse(null), we have to change the return type from
+        //       UserResponse to Optional<UserResponse>. Then in the controller we would have to use,
+        //  userService.getUserbyId(id).map(ResponseEntity::ok) .orElseGet(() -> ResponseEntity.notFound().build());
         return repository.findById(id).map(this::mapUserToUserResponse).orElse(null);
 
     }

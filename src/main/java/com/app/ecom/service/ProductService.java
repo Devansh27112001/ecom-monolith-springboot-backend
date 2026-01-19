@@ -27,9 +27,13 @@ public class ProductService {
 
     public ProductResponse addProduct(ProductRequest  productRequest){
         Product product = new Product();
-        System.out.println("ProductService:addProduct =  " +  productRequest);
+        // Converting ProductRequest to Product
         mapProductRequestToProduct(product, productRequest);
+
+        // Saving the Product to the database
         Product savedProduct = productRepo.save(product);
+
+        // Mapping the saved product returned from the database to ProductResponse.
         return mapToProductResponse(savedProduct);
     }
 
@@ -59,6 +63,7 @@ public class ProductService {
 
     public Optional<ProductResponse> updateProduct(ProductRequest productRequest, Long id) {
         return productRepo.findById(id).map(existing -> {
+            // Mapping the ProductRequest to Product.
             mapProductRequestToProduct(existing, productRequest);
             Product savedProduct = productRepo.save(existing);
             return mapToProductResponse(savedProduct);
@@ -66,6 +71,7 @@ public class ProductService {
     }
 
     public boolean deleteById(Long id) {
+        // Soft delete: Changing ACTIVE status to false.
         return productRepo.findById(id)
                 .map(existingProduct -> {
                     existingProduct.setActive(false);
