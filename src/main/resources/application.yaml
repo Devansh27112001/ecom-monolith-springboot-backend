@@ -18,3 +18,23 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: on
+
+# Exposing all the actuator end points
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  endpoint:
+    health:
+        show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: MyWebApp
+    description: App build by us
+    version: 2.0.0
